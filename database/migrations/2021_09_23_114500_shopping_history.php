@@ -13,7 +13,7 @@ class ShoppingHistory extends Migration
      */
     public function up()
     {
-        //
+        
     }
 
     /**
@@ -23,6 +23,6 @@ class ShoppingHistory extends Migration
      */
     public function down()
     {
-        //
+        
     }
 }

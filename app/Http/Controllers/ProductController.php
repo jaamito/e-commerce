@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Session;
 use App\Models\Products;
 use App\Models\Category;
 use App\Models\Product_Category;
+use App\Models\Cart;
+use Auth;
 
 class ProductController extends Controller
 {
@@ -32,7 +34,16 @@ class ProductController extends Controller
 
     public function createProduct(Request $request){
         $categories = Category::all();
-        return view('Products.product', array('categories' => $categories));
+
+        if (Auth::user()){
+            $cart = Products::join('carts', 'carts.productId', '=', 'products.id')->where('carts.userId', Auth::user()->id)->get(['carts.dateBuy as dateBuy', 'carts.dateNotBuy as dateNotBuy','products.id as id', 'products.productName as productName', 'products.productShortDescription as productShortDescription', 'products.productDescription as productDescription', 'products.productPathImage as productPathImage', 'products.productPrice as productPrice']);
+            $countCart = count($cart);
+        }else{
+            $cart = [];
+            $countCart = 0;
+        }
+        
+        return view('Products.product', array('categories' => $categories, 'cart' => $cart, 'countCart' => $countCart));
     }
 
     public function saveProduct(Request $request){
@@ -64,18 +75,56 @@ class ProductController extends Controller
             $lastProduct = Products::latest()->first();
             
             $arrayDelCategories = request()->input('category');
-            
-            foreach ($arrayDelCategories as $key => $category){
-                
-                $product_category = new Product_Category();
-                $product_category->categoryId = $category;
-                $product_category->productId = $lastProduct->id;
-                $product_category->save();
+            if($arrayDelCategories){
+                foreach ($arrayDelCategories as $key => $category){
+                    
+                    $product_category = new Product_Category();
+                    $product_category->categoryId = $category;
+                    $product_category->productId = $lastProduct->id;
+                    $product_category->save();
+                }
             }
-
             return redirect('/');
     
-    }  
+    }   
+
+    public function productInfo($id = NULL){
+
+        if($id != NULL){
+            $product    = Products::firstWhere('id', $id);
+            $categories = Category::join('product__categories', 'product__Categories.categoryId', '=', 'categories.id')->where('product__categories.productId', $product->id)->get(['categories.categoryName as categoryName', 'categories.id as id']);
+            
+            if (Auth::user()){
+                $cart = Products::join('carts', 'carts.productId', '=', 'products.id')->where('carts.userId', Auth::user()->id)->get(['carts.dateBuy as dateBuy', 'carts.dateNotBuy as dateNotBuy','products.id as id', 'products.productName as productName', 'products.productShortDescription as productShortDescription', 'products.productDescription as productDescription', 'products.productPathImage as productPathImage', 'products.productPrice as productPrice']);
+                $countCart = count($cart);
+            }else{
+                $cart = [];
+                $countCart = 0;
+            }
+
+            if($product){
+                $err = 0;
+            }else{
+                $err = 1;
+            }
+            
+            return view('Products.productInfo', array('product' => $product, 'err' => $err, 'categories' => $categories, 'cart' => $cart, 'countCart' => $countCart));
+        }
+
+    }
+
+    public function addToCartProduct($id = NULL){
+
+        if($id){
+            $cart = new Cart();
+            $cart->productId = $id;
+            $cart->productQta = 1;
+            $cart->userId = Auth::user()->id;
+            $cart->save();
+        }   
+
+        return redirect()->back(); 
+    }
 
     
 }

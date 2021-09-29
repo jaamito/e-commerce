@@ -13,7 +13,15 @@ class Cart extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('carts', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('productId');
+            $table->string('productQta');
+            $table->string('userId');
+            $table->dateTime('dateBuy')->default('1900-01-01 12:12:12');
+            $table->dateTime('dateNotBuy')->default('1900-01-01 12:12:12');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -23,6 +31,6 @@ class Cart extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('carts');
     }
 }

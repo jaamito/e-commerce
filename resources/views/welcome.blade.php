@@ -192,7 +192,7 @@ table.shoping-cart-table tr td:last-child {
         <div class='col-md-4'>
           <div class="card-deck">
             <div class="card">
-                <img class="card-img-top" src="{{asset('storage/category/' . $category->categoryPathImage)}}" alt="Card image cap">
+                <img class="card-img-top" src="{{asset('storage/category/' . $category->categoryPathImage)}}" alt="Card image cap" style='max-height:170px; max-width:350px'>
                 <div class="card-body">
                     <h5 class="card-title text-center">{{$category->categoryName}}</h5>
                 </div>
@@ -208,21 +208,21 @@ table.shoping-cart-table tr td:last-child {
               <div class="ibox">
                   <div class="ibox-content product-box">
                       <div class="product-imitation">
-                          <img src='{{asset('storage/product/' . $product->productPathImage)}}' style='width:100%;height:100%'>
+                          <img src='{{asset('storage/product/' . $product->productPathImage)}}' style='width:100%;height:100%;max-height:270px; max-width:215px'>
                       </div>
                       <div class="product-desc">
                           <span class="product-price">
                               {{$product->productPrice}} €
                           </span>
                           <small class="text-muted">{{$product->categoryName}}</small>
-                          <a href="#" class="product-name"> {{$product->productName}}</a>
+                          <a href="{{ route('productInfo', ['id' => $product->id]) }}" class="product-name"> {{$product->productName}}</a>
 
                           <div class="small m-t-xs">
                             {{$product->productShortDescription}}
                           </div><br>
                           <div class="m-t text-righ">
-                              <a href="#" class="btn btn-xs btn-outline btn-primary">Info <i class="fa fa-long-arrow-right"></i> </a>
-                              <a href="#" class="btn btn-xs btn-outline btn-primary"> 
+                              <a href="{{ route('productInfo', ['id' => $product->id]) }}" class="btn btn-xs btn-outline btn-primary">Info <i class="fa fa-long-arrow-right"></i> </a>
+                              <a href="{{ route('addToCartProduct', ['id' => $product->id]) }}" class="btn btn-xs btn-outline btn-primary"> 
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
                                   <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                                 </svg> 

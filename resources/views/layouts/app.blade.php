@@ -45,7 +45,6 @@
                     
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
@@ -62,16 +61,36 @@
                           
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                    <span class="badge badge-danger navbar-badge" id='cart-count-item'>
+                                        
+                                    </span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
                                         <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                                     </svg>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
+                                    @foreach( $cart as $key => $item )
+                                        @if($item->dateBuy == '1900-01-01 12:12:12' and $item->dateNotBuy == '1900-01-01 12:12:12')
+                                            <a href="{{ route('productInfo', ['id' => $item->id]) }}" class="dropdown-item items-carts">
+                                                <!-- Message Start -->
+                                                <div class="media">
+                                                <img src="{{asset('storage/product/' . $item->productPathImage)}}" style='max-height:100px' alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                                <div class="media-body">
+                                                    <b class="dropdown-item-title">{{$item->productName}}</b>
+                                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> {{$item->productPrice}}€</p>
+                                                </div>
+                                                </div>
+                                                <!-- Message End -->
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                    <div class="dropdown-divider "></div>
+                                    <a href="{{ route('toBuy') }}" class=" btn btn-block btn-primary btn-xs" style='padding:2px'>
+                                        To buy
+                                    </a>
                                 </div>
                             </li>
+                            
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -97,5 +116,10 @@
             @yield('content')
         </main>
     </div>
+    <script>
+       
+        document.getElementById("cart-count-item").innerHTML = document.querySelectorAll('.items-carts').length;
+
+    </script>
 </body>
 </html>
